@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import android.util.Log
 import com.inf2007.lab01.ui.theme.Lab01Theme
 
 class MainActivity : ComponentActivity() {
@@ -37,10 +38,10 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScreen() {
     Lab01Theme {
-        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-            var username by remember { mutableStateOf("") }
-            var showGreeting by remember { mutableStateOf(false) }
+        var username by remember { mutableStateOf("") }
+        var showGreeting by remember { mutableStateOf(false) }
 
+        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
             Column(
                 modifier = Modifier
                     .padding(innerPadding)
@@ -51,7 +52,10 @@ fun MainScreen() {
                 // User Input
                 UserInput(
                     name = username,
-                    onNameChange = { username = it }
+                    onNameChange = {
+                        username = it
+                        showGreeting = false  // Reset greeting when input changes
+                    }
                 )
 
                 // Submit Button
@@ -59,6 +63,7 @@ fun MainScreen() {
                     onClick = {
                         if (username.isNotBlank()) {
                             showGreeting = true
+                            Log.d("DEBUG", "Button clicked - showGreeting: $showGreeting, username: $username") // Debugging log
                         }
                     },
                     modifier = Modifier
@@ -96,6 +101,7 @@ fun UserInput(name: String, onNameChange: (String) -> Unit, modifier: Modifier =
 
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
+    Log.d("DEBUG", "Greeting Composable - name: $name")  // Debugging log
     Text(
         text = "Hello $name!, Welcome to INF2007!",
         modifier = modifier
